@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hahu/constants/app_colors.dart';
 
 void main() {
   runApp(const MyApp());
@@ -31,22 +34,17 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const ScreenUtilInit(
+          designSize: Size(360, 800),
+          minTextAdapt: true,
+          splitScreenMode: true,
+          child: MyHomePage(title: 'Flutter Demo Home Page')),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
 
   final String title;
 
@@ -55,71 +53,438 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
+      backgroundColor: Colors.grey.shade100,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      const Icon(Icons.home),
+                      Text(
+                        "Home",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 22.sp),
+                      )
+                    ],
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                        color: Colors.grey,
+                        borderRadius: BorderRadius.circular(100)),
+                    width: 28.w,
+                    height: 28.w,
+                  )
+                ],
+              ),
+              SizedBox(
+                height: 22.h,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    constraints:
+                        const BoxConstraints(minWidth: 100, maxWidth: 160),
+                    decoration: BoxDecoration(border: Border.all(width: 1)),
+                    child: const Row(
+                      children: [
+                        Icon(Icons.arrow_drop_down_circle),
+                        Text("Near by Resturant"),
+                      ],
+                    ),
+                  ),
+                  const Icon(Icons.filter_alt)
+                ],
+              ),
+              Expanded(
+                child: ListView.builder(
+                    itemCount: 12,
+                    itemBuilder: (context, index) {
+                      return const ResturantCard(
+                        imageLink:
+                            "https://img.freepik.com/free-photo/exploding-burger-with-vegetables-melted-cheese-black-background-generative-ai_157027-1734.jpg?size=626&ext=jpg&ga=GA1.1.2082370165.1716336000&semt=sph",
+                        title: 'Burger King',
+                        subscriptionStarterPrice: 1299,
+                        rating: 3.6,
+                        avarageCookingTime: "25 - 30 min",
+                      );
+                    }),
+              ),
+            ],
+          ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
+
+class ResturantCard extends StatefulWidget {
+  final String title;
+  final double rating;
+  final String avarageCookingTime;
+  final int subscriptionStarterPrice;
+  final String imageLink;
+
+  const ResturantCard(
+      {super.key,
+      required this.title,
+      required this.imageLink,
+      required this.rating,
+      required this.avarageCookingTime,
+      required this.subscriptionStarterPrice});
+
+  @override
+  State<ResturantCard> createState() => _ResturantCardState();
+}
+
+class _ResturantCardState extends State<ResturantCard> {
+  final _pageController = PageController();
+  final List<Widget> pages = [
+    Image.network(
+      "https://img.freepik.com/free-photo/exploding-burger-with-vegetables-melted-cheese-black-background-generative-ai_157027-1734.jpg?size=626&ext=jpg&ga=GA1.1.2082370165.1716336000&semt=sph",
+      fit: BoxFit.cover,
+    ),
+    Container(
+      color: Colors.green,
+      child: const Text("2"),
+    ),
+    Container(
+      color: Colors.blue,
+      child: const Text("3"),
+    ),
+  ];
+  int _currentIndex = 0;
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        print("parent clicked");
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              blurStyle: BlurStyle.inner,
+              color: Colors.black.withOpacity(.04),
+              spreadRadius: 1,
+              blurRadius: 10,
+              offset: const Offset(0, 5), // Position the shadow
+            ),
+          ],
+        ),
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 100.h,
+              width: double.infinity,
+              child: ClipRRect(
+                borderRadius: const BorderRadius.only(
+                    topRight: Radius.circular(
+                      5,
+                    ),
+                    topLeft: Radius.circular(5)),
+                child: Stack(
+                  children: [
+                    PageView(
+                      controller: _pageController,
+                      onPageChanged: (index) {
+                        setState(() {
+                          _currentIndex = index;
+                        });
+                      },
+                      scrollDirection: Axis.horizontal,
+                      children: pages,
+                    ),
+                    Center(
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 4.w),
+                        width: double.infinity,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                if (_currentIndex != 0) {
+                                  _pageController.jumpToPage(_currentIndex - 1);
+                                }
+                              },
+                              child: Container(
+                                width: 40.w,
+                                height: 40.w,
+                                padding: const EdgeInsets.all(4),
+                                decoration: BoxDecoration(
+                                    color: Colors.grey.withOpacity(.5),
+                                    borderRadius: BorderRadius.circular(100)),
+                                child: const Icon(
+                                  Icons.arrow_back_ios_sharp,
+                                  color: Colors.white,
+                                  size: 18,
+                                ),
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                if (_currentIndex != pages.length - 1) {
+                                  _pageController.jumpToPage(_currentIndex + 1);
+                                }
+                              },
+                              child: Container(
+                                width: 40.w,
+                                height: 40.w,
+                                padding: const EdgeInsets.all(4),
+                                decoration: BoxDecoration(
+                                    color: Colors.grey.withOpacity(.5),
+                                    borderRadius: BorderRadius.circular(100)),
+                                child: const Icon(
+                                  Icons.arrow_forward_ios_sharp,
+                                  color: Colors.white,
+                                  size: 18,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(bottom: 5.h),
+                      height: double.infinity,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: List.generate(pages.length, (index) {
+                          return AnimatedContainer(
+                            duration: const Duration(milliseconds: 100),
+                            margin: const EdgeInsets.all(2),
+                            width: 8.w,
+                            height: 8.w,
+                            decoration: BoxDecoration(
+                                color: _currentIndex == index
+                                    ? Colors.pinkAccent
+                                    : Colors.grey.withOpacity(.8),
+                                borderRadius: BorderRadius.circular(100)),
+                          );
+                        }),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              // child: ListView.builder(
+              //     scrollDirection: Axis.horizontal,
+              //     itemBuilder: (context, index) {
+              //       return ClipRRect(
+              //         borderRadius: const BorderRadius.only(
+              //             topRight: Radius.circular(5),
+              //             topLeft: Radius.circular(5)),
+              //         child: Image.network(
+              //           imageLink,
+              //           height: 100,
+              //           width: double.infinity,
+              //           fit: BoxFit.cover,
+              //         ),
+              //       );
+              //     }),
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
+              decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(5),
+                      bottomRight: Radius.circular(5))),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.title,
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 26.sp,
+                        fontFamily: "Raleway"),
+                  ),
+                  SizedBox(
+                    height: 4.h,
+                  ),
+                  Row(
+                    children: [
+                      Container(
+                        height: 28.h,
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 12.h, vertical: 4.h),
+                        decoration: BoxDecoration(
+                            color: Colors.black12,
+                            borderRadius: BorderRadius.circular(20)),
+                        child: Row(
+                          children: [
+                            Text(
+                              widget.rating.toString(),
+                              style: TextStyle(
+                                  fontSize: 10.sp,
+                                  fontStyle: FontStyle.italic,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.lightGrey),
+                            ),
+                            SizedBox(
+                              width: 2.w,
+                            ),
+                            Icon(
+                              Icons.star,
+                              color: Colors.amber,
+                              size: 20.r,
+                            )
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        width: 4.h,
+                      ),
+                      Container(
+                        height: 28.h,
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 12.h, vertical: 4.h),
+                        decoration: BoxDecoration(
+                            color: Colors.black12,
+                            borderRadius: BorderRadius.circular(20)),
+                        child: Center(
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.punch_clock_outlined,
+                                color: Colors.pink,
+                                size: 15.r,
+                              ),
+                              SizedBox(
+                                width: 4.w,
+                              ),
+                              Text(
+                                widget.avarageCookingTime,
+                                style: TextStyle(
+                                    fontSize: 10.sp,
+                                    fontStyle: FontStyle.italic,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.lightGrey),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 4.w,
+                      ),
+                      Container(
+                        height: 28.h,
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 12.h, vertical: 4.h),
+                        decoration: BoxDecoration(
+                            color: Colors.black12,
+                            borderRadius: BorderRadius.circular(20)),
+                        child: Center(
+                          child: Text(
+                            "2.4 KM",
+                            style: TextStyle(
+                                fontSize: 10.sp,
+                                fontStyle: FontStyle.italic,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.lightGrey),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 4.h,
+                      ),
+                      Container(
+                        height: 28.h,
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 12.h, vertical: 4.h),
+                        decoration: BoxDecoration(
+                            color: Colors.black12,
+                            borderRadius: BorderRadius.circular(20)),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.car_crash,
+                              color: Colors.pink,
+                              size: 15.r,
+                            ),
+                            SizedBox(
+                              width: 4.w,
+                            ),
+                            Text(
+                              "12min",
+                              style: TextStyle(
+                                  fontSize: 10.sp,
+                                  fontStyle: FontStyle.italic,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.lightGrey),
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 8.h,
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        "Subscription starting from ",
+                        style: TextStyle(
+                            color: AppColors.lightGrey,
+                            fontStyle: FontStyle.italic,
+                            fontSize: 10.sp,
+                            fontWeight: FontWeight.normal),
+                      ),
+                      Text(
+                        "${widget.subscriptionStarterPrice} birr",
+                        style: TextStyle(
+                            color: Colors.pinkAccent,
+                            fontSize: 10.sp,
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.bold),
+                      )
+                    ],
+                  )
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+//  Positioned(
+//                 top: 10,
+//                 left: 10,
+//                 child: GestureDetector(
+//                   onTap: () {
+//                     print("subscribe");
+//                   },
+//                   child: Container(
+//                     padding: const EdgeInsets.symmetric(
+//                         horizontal: 30, vertical: 8),
+//                     decoration: BoxDecoration(
+//                         color: Colors.redAccent,
+//                         borderRadius: BorderRadius.circular(20)),
+//                     child: const Text(
+//                       "Subscirbe",
+//                       style: TextStyle(
+//                           color: Colors.white, fontWeight: FontWeight.w500),
+//                     ),
+//                   ),
+//                 ))
