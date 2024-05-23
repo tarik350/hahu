@@ -56,7 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
+      backgroundColor: Colors.grey.shade400,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -153,13 +153,13 @@ class _ResturantCardState extends State<ResturantCard> {
       "https://img.freepik.com/free-photo/exploding-burger-with-vegetables-melted-cheese-black-background-generative-ai_157027-1734.jpg?size=626&ext=jpg&ga=GA1.1.2082370165.1716336000&semt=sph",
       fit: BoxFit.cover,
     ),
-    Container(
-      color: Colors.green,
-      child: const Text("2"),
+    Image.network(
+      "https://img.freepik.com/free-psd/food-menu-delicious-pizza-web-banner-template_106176-419.jpg",
+      fit: BoxFit.cover,
     ),
-    Container(
-      color: Colors.blue,
-      child: const Text("3"),
+    Image.network(
+      "https://img.freepik.com/premium-photo/lasagna-basil-banner-free-space-text-mockup-fast-food-top-view-empty-professional-phonography_997345-18900.jpg",
+      fit: BoxFit.cover,
     ),
   ];
   int _currentIndex = 0;
@@ -217,7 +217,11 @@ class _ResturantCardState extends State<ResturantCard> {
                             GestureDetector(
                               onTap: () {
                                 if (_currentIndex != 0) {
-                                  _pageController.jumpToPage(_currentIndex - 1);
+                                  _pageController.animateToPage(
+                                      _currentIndex - 1,
+                                      duration:
+                                          const Duration(milliseconds: 100),
+                                      curve: Curves.bounceInOut);
                                 }
                               },
                               child: Container(
@@ -237,7 +241,11 @@ class _ResturantCardState extends State<ResturantCard> {
                             GestureDetector(
                               onTap: () {
                                 if (_currentIndex != pages.length - 1) {
-                                  _pageController.jumpToPage(_currentIndex + 1);
+                                  _pageController.animateToPage(
+                                      _currentIndex + 1,
+                                      duration:
+                                          const Duration(milliseconds: 100),
+                                      curve: Curves.bounceInOut);
                                 }
                               },
                               child: Container(
@@ -299,7 +307,7 @@ class _ResturantCardState extends State<ResturantCard> {
               //     }),
             ),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
+              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
               decoration: const BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
@@ -457,6 +465,28 @@ class _ResturantCardState extends State<ResturantCard> {
                             fontWeight: FontWeight.bold),
                       )
                     ],
+                  ),
+                  SizedBox(
+                    height: 12.h,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      print("subscribe");
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 30, vertical: 4),
+                      decoration: BoxDecoration(
+                          // border:
+                          // Border.all(width: 1, color: Colors.pinkAccent),
+                          color: Colors.pinkAccent,
+                          borderRadius: BorderRadius.circular(5)),
+                      child: const Text(
+                        "Subscirbe",
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.w500),
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -467,24 +497,3 @@ class _ResturantCardState extends State<ResturantCard> {
     );
   }
 }
-
-//  Positioned(
-//                 top: 10,
-//                 left: 10,
-//                 child: GestureDetector(
-//                   onTap: () {
-//                     print("subscribe");
-//                   },
-//                   child: Container(
-//                     padding: const EdgeInsets.symmetric(
-//                         horizontal: 30, vertical: 8),
-//                     decoration: BoxDecoration(
-//                         color: Colors.redAccent,
-//                         borderRadius: BorderRadius.circular(20)),
-//                     child: const Text(
-//                       "Subscirbe",
-//                       style: TextStyle(
-//                           color: Colors.white, fontWeight: FontWeight.w500),
-//                     ),
-//                   ),
-//                 ))
